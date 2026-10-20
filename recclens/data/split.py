@@ -24,8 +24,8 @@ def split_by_group(df: pd.DataFrame, ratios: list[float], seed: int) -> dict[str
     rng = np.random.default_rng(seed)
     rng.shuffle(groups)
 
-    n_train = int(round(ratios[0] * len(groups)))
-    n_val = int(round(ratios[1] * len(groups)))
+    n_train = round(ratios[0] * len(groups))
+    n_val = round(ratios[1] * len(groups))
     assignment = {
         "train": groups[:n_train],
         "val": groups[n_train : n_train + n_val],
