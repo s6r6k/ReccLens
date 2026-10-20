@@ -11,5 +11,6 @@ split:
 queries:
   languages: [en, id, ms, th, vi]
   per_listing: 3
-  model: claude-haiku-5-5
+  model: claude-opus-5-5
+  effort: low
   output: ${data.processed_dir}/queries.csv
