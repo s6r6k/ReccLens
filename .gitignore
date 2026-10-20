@@ -8,16 +8,15 @@ venv/
 .ruff_cache/
 
 # Data and artefacts (Kaggle data is never committed)
-data/
-outputs/
-multirun/
-checkpoints/
+/data/
+/outputs/
+/multirun/
+/checkpoints/
 *.onnx
 *.plan
 *.engine
 *.index
 *.npy
-!tests/fixtures/**
 
 # Tools
 wandb/
