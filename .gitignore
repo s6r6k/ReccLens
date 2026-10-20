@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Data and artefacts (Kaggle data is never committed)
+data/
+outputs/
+multirun/
+checkpoints/
+*.onnx
+*.plan
+*.engine
+*.index
+*.npy
+!tests/fixtures/**
+
+# Tools
+wandb/
+.env
+.DS_Store
+.ipynb_checkpoints/
