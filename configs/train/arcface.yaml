@@ -1,0 +1,17 @@
+epochs: 10
+batch_size: 64
+m_per_class: 2           # listings per label group in each batch
+lr_lora: 2.0e-4
+lr_head: 1.0e-3
+lr_loss: 1.0e-2          # ArcFace class-centre weights
+weight_decay: 1.0e-4
+warmup_ratio: 0.05
+grad_clip: 1.0
+amp: true
+num_workers: 4
+
+arcface:
+  margin: 28.6           # degrees (pytorch-metric-learning convention, ~0.5 rad)
+  scale: 30.0
+
+checkpoint_dir: checkpoints/${model.name}
