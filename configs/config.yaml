@@ -1,6 +1,8 @@
 defaults:
   - data: shopee
   - eval: default
+  - model: siglip_e5
+  - train: arcface
   - _self_
 
 seed: 42
