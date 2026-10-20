@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check .
+      - name: Unit tests
+        run: pytest -q
+      - name: Eval smoke test on sample data
+        run: |
+          python -m recclens.baselines.tfidf \
+            --items tests/fixtures/sample_items.csv \
+            --queries tests/fixtures/sample_queries.csv \
+            --out outputs/ci/items.npy --dim 16
+          python -m recclens.evaluate \
+            eval.items_csv=tests/fixtures/sample_items.csv \
+            eval.item_embeddings=outputs/ci/items.npy \
+            eval.queries_csv=tests/fixtures/sample_queries.csv \
+            eval.query_embeddings=outputs/ci/queries.npy \
+            eval.match_threshold=0.5 \
+            hydra.run.dir=outputs/ci/eval
+          cat outputs/ci/eval/metrics.json
