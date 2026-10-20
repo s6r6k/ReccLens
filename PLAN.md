@@ -56,15 +56,15 @@ VLM-labelled pairs ► distilled reranker         │
 ## Weekly milestones
 
 ### Week 1 (19–25 Oct): data and evaluation harness
-- [ ] Download script; read competition rules on redistribution.
-- [ ] Group split 70/15/15 so test products never appear in training.
+- [x] Download script; read competition rules on redistribution.
+- [x] Group split 70/15/15 so test products never appear in training.
 - [ ] Generate 3–5 queries per listing in en, id, ms, th, vi; hand-check 200.
-- [ ] `evaluate.py` reports F1, Recall@10, NDCG@10, MRR for any model.
-- [ ] Repo skeleton, Hydra configs, W&B logging, CI running eval on a sample.
+- [x] `evaluate.py` reports F1, Recall@10, NDCG@10, MRR for any model.
+- [x] Repo skeleton, Hydra configs, W&B logging, CI running eval on a sample.
 
 ### Week 2 (26 Oct–1 Nov): baselines, then first model
-- [ ] Baselines: TF-IDF titles, zero-shot SigLIP images, SigLIP + e5 concat.
-- [ ] Image and text towers with ArcFace on label groups, LoRA on both.
+- [x] Baselines: TF-IDF titles, zero-shot SigLIP images, SigLIP + e5 concat (code; numbers pending data).
+- [x] Image and text towers with ArcFace on label groups, LoRA on both (code; run pending GPU).
 - [ ] Baseline table in the README.
 
 ### Week 3 (2–8 Nov): fusion and hard negatives
