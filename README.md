@@ -5,7 +5,7 @@ Give it a product photo, a text query in English, Indonesian, Malay, Thai or Vie
 or both, and it returns the top 10 matching listings and groups listings that are the
 same product. Trained on Shopee's public Price Match data; served with Triton and TensorRT.
 
-> Status: week 1 of 6 (data and evaluation harness). See [PLAN.md](PLAN.md) for the full build plan.
+> Status: week 2 of 6 (baselines and first trained model). See [PLAN.md](PLAN.md) for the full build plan.
 
 ## Results
 
@@ -16,6 +16,7 @@ Measured on held-out label groups (no test product is seen in training).
 | TF-IDF titles | – | – | – |
 | Zero-shot SigLIP 2 (image) | – | – | – |
 | Zero-shot SigLIP 2 + e5 (concat) | – | – | – |
+| ReccLens week 2 (ArcFace + LoRA, concat head) | – | – | – |
 | ReccLens (ArcFace + InfoNCE + MoE) | – | – | – |
 | + hybrid retrieval + reranker | – | – | – |
 
@@ -33,12 +34,27 @@ python -m recclens.data.split
 python -m recclens.data.gen_queries submit --limit 200   # sample to hand-check first
 python -m recclens.data.gen_queries collect
 
-# 3. Baseline + evaluation
+# 3. Baselines + evaluation
 python -m recclens.baselines.tfidf --items data/processed/test.csv \
     --queries data/processed/queries.csv --out outputs/tfidf/items.npy
 python -m recclens.evaluate eval.item_embeddings=outputs/tfidf/items.npy \
     eval.queries_csv=data/processed/queries.csv eval.query_embeddings=outputs/tfidf/queries.npy
+python -m recclens.baselines.zero_shot --queries data/processed/queries.csv
+
+# 4. Train (ArcFace on label groups, LoRA on SigLIP 2 and e5), then embed and score test
+pip install -e ".[train]"
+python -m recclens.train
+python -m recclens.embed model.checkpoint=checkpoints/siglip_e5/best.pt \
+    eval.queries_csv=data/processed/queries.csv hydra.run.dir=outputs/arcface
+python -m recclens.evaluate eval.item_embeddings=outputs/arcface/items.npy \
+    eval.queries_csv=data/processed/queries.csv eval.query_embeddings=outputs/arcface/queries.npy
+
+# 5. Pick the match threshold on val (embed with eval.split=val first), report on test
+python scripts/tune_threshold.py --val-items data/processed/val.csv --val-emb <val items.npy> \
+    --test-items data/processed/test.csv --test-emb outputs/arcface/items.npy
 ```
+
+`model.mode` picks the towers: `image`, `text` or `concat`. Training runs on CUDA, Apple MPS or CPU.
 
 Add `wandb.enabled=true` to any Hydra command to log to Weights & Biases.
 
