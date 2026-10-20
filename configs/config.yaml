@@ -1,0 +1,17 @@
+defaults:
+  - data: shopee
+  - eval: default
+  - _self_
+
+seed: 42
+project: recclens
+
+wandb:
+  enabled: false
+  project: ${project}
+  entity: null
+  tags: []
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
