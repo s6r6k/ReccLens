@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 
 import hydra
+from hydra.core.hydra_config import HydraConfig
 import numpy as np
 import pandas as pd
 from omegaconf import DictConfig, OmegaConf
@@ -107,7 +108,8 @@ def main(cfg: DictConfig) -> None:
         results |= evaluate_queries(items, item_emb, queries.reset_index(drop=True), query_emb, ev.k)
 
     print(json.dumps(results, indent=2))
-    Path("metrics.json").write_text(json.dumps(results, indent=2))
+    out_dir = Path(HydraConfig.get().runtime.output_dir)
+    (out_dir / "metrics.json").write_text(json.dumps(results, indent=2))
 
     if cfg.wandb.enabled:
         import wandb
