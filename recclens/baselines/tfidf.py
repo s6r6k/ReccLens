@@ -19,7 +19,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 def embed_titles(
     titles: list[str], queries: list[str] | None = None, dim: int = 256
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    vectorizer = TfidfVectorizer(analyzer="char_wb", ngram_range=(2, 4), min_df=1, sublinear_tf=True)
+    vectorizer = TfidfVectorizer(
+        analyzer="char_wb", ngram_range=(2, 4), min_df=1, sublinear_tf=True
+    )
     item_tfidf = vectorizer.fit_transform(titles)
     dim = min(dim, item_tfidf.shape[1] - 1, item_tfidf.shape[0] - 1)
     svd = TruncatedSVD(n_components=dim, random_state=0)
