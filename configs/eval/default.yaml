@@ -1,0 +1,10 @@
+# Paths to a model's outputs. Embeddings are .npy arrays row-aligned with the CSVs.
+split: test
+items_csv: ${data.processed_dir}/${eval.split}.csv
+item_embeddings: null
+queries_csv: null
+query_embeddings: null
+
+k: 10
+match_threshold: 0.75     # cosine similarity; tune on val, report on test
+max_matches: 50
