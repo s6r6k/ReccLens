@@ -1,0 +1,15 @@
+competition: shopee-product-matching
+raw_dir: data/raw
+processed_dir: data/processed
+train_csv: ${data.raw_dir}/train.csv
+image_dir: ${data.raw_dir}/train_images
+
+split:
+  ratios: [0.70, 0.15, 0.15]  # train / val / test, by label_group
+  seed: ${seed}
+
+queries:
+  languages: [en, id, ms, th, vi]
+  per_listing: 3
+  model: claude-haiku-5-5
+  output: ${data.processed_dir}/queries.csv
