@@ -1,0 +1,25 @@
+name: siglip_e5
+
+image:
+  backbone: google/siglip2-base-patch16-224
+  lora:
+    enabled: true
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, out_proj]
+
+text:
+  backbone: intfloat/multilingual-e5-base
+  max_length: 64
+  lora:
+    enabled: true
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [query, key, value]
+
+# image | text | concat. concat joins both towers through the fusion head.
+mode: concat
+embed_dim: 512
+checkpoint: null
