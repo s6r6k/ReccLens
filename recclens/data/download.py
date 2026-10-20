@@ -8,6 +8,7 @@ account, the competition rules accepted, and ~/.kaggle/kaggle.json in place.
 
 import argparse
 import subprocess
+import sys
 import zipfile
 from pathlib import Path
 
@@ -17,10 +18,8 @@ def download(competition: str, out_dir: Path) -> None:
     if (out_dir / "train.csv").exists():
         print(f"{out_dir / 'train.csv'} already exists, skipping download")
         return
-    subprocess.run(
-        ["kaggle", "competitions", "download", "-c", competition, "-p", str(out_dir)],
-        check=True,
-    )
+    cli = [sys.executable, "-m", "kaggle", "competitions", "download"]
+    subprocess.run([*cli, "-c", competition, "-p", str(out_dir)], check=True)
     archive = out_dir / f"{competition}.zip"
     with zipfile.ZipFile(archive) as zf:
         zf.extractall(out_dir)
