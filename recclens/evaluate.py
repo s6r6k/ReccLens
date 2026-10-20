@@ -10,9 +10,9 @@ import json
 from pathlib import Path
 
 import hydra
-from hydra.core.hydra_config import HydraConfig
 import numpy as np
 import pandas as pd
+from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
 
 from recclens.eval.metrics import match_f1, mrr, ndcg_at_k, recall_at_k
@@ -68,7 +68,7 @@ def evaluate_queries(
     query_emb = l2_normalize(query_emb.astype(np.float32))
     ranked_all = top_k(query_emb @ item_emb.T, k)
 
-    group_of = dict(zip(items["posting_id"], items["label_group"]))
+    group_of = dict(zip(items["posting_id"], items["label_group"], strict=True))
     rows_of_group: dict = {}
     for i, g in enumerate(items["label_group"]):
         rows_of_group.setdefault(g, set()).add(i)
@@ -105,7 +105,8 @@ def main(cfg: DictConfig) -> None:
         queries = pd.read_csv(root / ev.queries_csv)
         queries = queries[queries["posting_id"].isin(set(items["posting_id"]))]
         query_emb = np.load(root / ev.query_embeddings)[queries.index.to_numpy()]
-        results |= evaluate_queries(items, item_emb, queries.reset_index(drop=True), query_emb, ev.k)
+        queries = queries.reset_index(drop=True)
+        results |= evaluate_queries(items, item_emb, queries, query_emb, ev.k)
 
     print(json.dumps(results, indent=2))
     out_dir = Path(HydraConfig.get().runtime.output_dir)
