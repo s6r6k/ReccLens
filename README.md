@@ -9,16 +9,21 @@ same product. Trained on Shopee's public Price Match data; served with Triton an
 
 ## Results
 
-Measured on held-out label groups (no test product is seen in training).
+Measured on the 5,202 test listings (1,652 held-out label groups; no test product is seen
+in training). Match F1 uses the threshold that maximised F1 on val. Item Recall@10 and
+NDCG@10 rank the other test listings for each listing. Text-to-product numbers need the
+generated queries.
 
-| Model | Match F1 | Recall@10 (text→product) | NDCG@10 |
-|---|---|---|---|
-| TF-IDF titles | – | – | – |
-| Zero-shot SigLIP 2 (image) | – | – | – |
-| Zero-shot SigLIP 2 + e5 (concat) | – | – | – |
-| ReccLens week 2 (ArcFace + LoRA, concat head) | – | – | – |
-| ReccLens (ArcFace + InfoNCE + MoE) | – | – | – |
-| + hybrid retrieval + reranker | – | – | – |
+| Model | Match F1 | Item Recall@10 | Item NDCG@10 | Recall@10 (text→product) |
+|---|---|---|---|---|
+| TF-IDF titles (char 2–4-grams + SVD 256) | 0.734 | 0.853 | 0.805 | – |
+| Zero-shot SigLIP 2 (image) | 0.751 | 0.917 | 0.886 | – |
+| Zero-shot SigLIP 2 + e5 (concat) | 0.799 | 0.946 | 0.918 | – |
+| ReccLens week 2 (ArcFace + LoRA, concat head) | – | – | – | – |
+| ReccLens (ArcFace + InfoNCE + MoE) | – | – | – | – |
+| + hybrid retrieval + reranker | – | – | – | – |
+
+Tuned thresholds: TF-IDF 0.70, SigLIP 0.80, SigLIP + e5 0.85.
 
 ## Quickstart
 
